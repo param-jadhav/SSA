@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.usa.gov.fedral.ssa.constant.AppConstants;
+import com.usa.gov.fedral.ssa.entity.StateMasterEntity;
 import com.usa.gov.fedral.ssa.model.SsnMaster;
 import com.usa.gov.fedral.ssa.properties.AppProperties;
 import com.usa.gov.fedral.ssa.service.SSAService;
@@ -61,7 +62,13 @@ public class SSAController {
 		long ssn = service.enrollForSSN(ssnModel);
 		// setting ssn to model attrib
 		if(ssn>0) {
-			model.addAttribute(AppConstants.SUCCESS, appProperties.getProperties().get(AppConstants.ENROLL_SUCCESS)+" "+ssn);
+			//format ssn
+			String SSN=Long.toString(ssn);
+			StringBuilder sb=new StringBuilder(SSN);
+			sb.insert(3,"-");
+			sb.insert(6,"-");
+			SSN=sb.toString();
+			model.addAttribute(AppConstants.SUCCESS, appProperties.getProperties().get(AppConstants.ENROLL_SUCCESS)+" "+SSN);
 			logger.info("***SSAController:: Enrolled Success with SSN***");
 		}
 		else { 
@@ -69,7 +76,7 @@ public class SSAController {
 			logger.info("***SSAController:: Enrollment Failure***");
 		}
 		initForm(model);
-		logger.debug("***SSAController:: enrollForSSNForm() method ended***");
+		logger.debug("***SSAController:: enrollForSSN() method ended***");
 		return "enrollSSN";
 	}
 
@@ -79,58 +86,13 @@ public class SSAController {
 	 * @param model
 	 */
 	private void initForm(Model model) {
-		List<String> statesList = new ArrayList<>();
-		statesList.add("Alabama");
-		statesList.add("Alaska");
-		statesList.add("Arizona");
-		statesList.add("Arkansas");
-		statesList.add("California");
-		statesList.add("Colorado");
-		statesList.add("Connecticut");
-		statesList.add("Delaware");
-		statesList.add("Florida");
-		statesList.add("Georgia");
-		statesList.add("Hawaii");
-		statesList.add("Idaho");
-		statesList.add("Illinois");
-		statesList.add("Indiana");
-		statesList.add("Iowa");
-		statesList.add("Kansas");
-		statesList.add("Kentucky");
-		statesList.add("Louisiana");
-		statesList.add("Maine");
-		statesList.add("Maryland");
-		statesList.add("Massachusetts");
-		statesList.add("Michigan");
-		statesList.add("Minnesota");
-		statesList.add("Mississippi");
-		statesList.add("Missouri");
-		statesList.add("Montana");
-		statesList.add("Nebraska");
-		statesList.add("Nevada");
-		statesList.add("New Hampshire");
-		statesList.add("New Jersey");
-		statesList.add("New Mexico");
-		statesList.add("New York");
-		statesList.add("North Carolina");
-		statesList.add("North Dakota");
-		statesList.add("Ohio");
-		statesList.add("Oklahoma");
-		statesList.add("Oregon");
-		statesList.add("Pennsylvania");
-		statesList.add("Rhode Island");
-		statesList.add("South Carolina");
-		statesList.add("South Dakota");
-		statesList.add("Tennessee");
-		statesList.add("Texas");
-		statesList.add("Utah");
-		statesList.add("Vermont");
-		statesList.add("Virginia");
-		statesList.add("Washington");
-		statesList.add("West Virginia");
-		statesList.add("Wisconsin");
-		statesList.add("Wyoming");
-
+		List<StateMasterEntity> listEntity=null;
+		List<String> statesList=new ArrayList<String>();
+		//invoke the service class method
+		listEntity=service.findAllStates();
+		listEntity.forEach(entity->{
+			statesList.add(entity.getStateName());
+		});
 		model.addAttribute("statesList", statesList);
 
 		List<String> gendersList = new ArrayList<>();

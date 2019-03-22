@@ -17,8 +17,12 @@ public class SSNNotFoundExceptionMapper extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(SSNNotfoundException.class)
-	public ResponseEntity<SSNNotfoundException> exceptionHandler(SSNNotfoundException ex, WebRequest request) {
-		return new ResponseEntity<SSNNotfoundException>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<InvalidSSN> exceptionHandler(SSNNotfoundException ex, WebRequest request) {
+		//create InvalidSSN class object
+		InvalidSSN exception = new InvalidSSN();
+		exception.setStatusCode(400);
+		exception.setErrorDesc("Invalid SSN");
+		return new ResponseEntity<InvalidSSN>(exception,HttpStatus.BAD_REQUEST);
 	}
 
 }

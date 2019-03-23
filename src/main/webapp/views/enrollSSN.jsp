@@ -46,6 +46,7 @@
 		$("#datepicker").datepicker({
 			changeMonth : true,
 			changeYear : true,
+			 yearRange: "-60:+0", 
 			maxDate : new Date(),
 			dateFormat : 'dd/mm/yy'
 		});

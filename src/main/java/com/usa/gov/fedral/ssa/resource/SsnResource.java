@@ -15,14 +15,15 @@ import com.usa.gov.fedral.ssa.service.SSAService;
 @RestController
 public class SsnResource {
 	
-	public SsnResource() {
-		System.out.println("SSN_Resource.SSNResource()");
-	}
 
 	@Autowired(required=true)
 	private SSAService service;
 	
 	private Logger logger=Logger.getLogger(SsnResource.class);
+	
+	public SsnResource() {
+		System.out.println("SSN_Resource.SSNResource()");
+	}
 	
 	/**
 	 * This method is used to valid given SSN
@@ -33,7 +34,7 @@ public class SsnResource {
 	public ResponseEntity<Object> validateSSN(@PathVariable long ssn) {
 		logger.debug("validateSSN() method execution is started");
 		//call service class validateSSN() method
-		SsnProfile profile=service.retriveSSN(ssn);
+		SsnProfile profile=service.validateSSN(ssn);
 		if(null!=profile) {
 			logger.debug("validateSSN() method execution is ended");
 			logger.debug("SSN validation is Completed");

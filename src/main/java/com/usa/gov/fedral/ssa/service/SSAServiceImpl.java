@@ -1,7 +1,9 @@
 package com.usa.gov.fedral.ssa.service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -11,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.usa.gov.fedral.ssa.entity.SsnMasterEntity;
-import com.usa.gov.fedral.ssa.entity.StateMasterEntity;
+import com.usa.gov.fedral.ssa.entity.UsaStatesMasterEntity;
 import com.usa.gov.fedral.ssa.model.SsnMaster;
 import com.usa.gov.fedral.ssa.repository.SsnMasterRepository;
-import com.usa.gov.fedral.ssa.repository.StateMasterRepository;
+import com.usa.gov.fedral.ssa.repository.UsaStatesMasterRepository;
 import com.usa.gov.fedral.ssa.resource.model.SsnProfile;
 
 @Service("ssaService")
@@ -26,7 +28,7 @@ public class SSAServiceImpl implements SSAService {
 	private SsnMasterRepository ssn_MasterRepository;
 	
 	@Autowired
-	private StateMasterRepository stateMasterRepository;
+	private UsaStatesMasterRepository usaStatesMasterRepository;
 
 	@Override
 	public long enrollForSSN(SsnMaster ssnModel) {
@@ -45,7 +47,7 @@ public class SSAServiceImpl implements SSAService {
 	}
 
 	@Override
-	public SsnProfile retriveSSN(long ssn) {
+	public SsnProfile validateSSN(long ssn) {
 		logger.debug("retriveSSN() method execution is started");
 		SsnProfile profile = new SsnProfile();
 		SsnMasterEntity entity = null;
@@ -64,14 +66,19 @@ public class SSAServiceImpl implements SSAService {
 		logger.info("SSN retrive is faild");
 		return null;
 	}
-	
-	public List<StateMasterEntity> findAllStates() {
-		logger.debug("findAllStates() method execution is started");
-		List<StateMasterEntity> listEntity=null;
-		listEntity=stateMasterRepository.findAll();
-		//return entity object
-		logger.debug("findAllStates() method execution is ended");
+
+	@Override
+	public Map<String, String> getAllStates() {
+		logger.debug("getAllStates() method execution is started");
+		// getting all states
+		List<UsaStatesMasterEntity> entityList = usaStatesMasterRepository.findAll();
+		Map<String, String> stateMap=new HashMap<String, String>();
+		entityList.forEach(entity->{
+			stateMap.put(entity.getStateCode(), entity.getStateName());
+		});
+		logger.debug("getAllStates() method execution is ended");
 		logger.debug("All state retrive is completed");
-		return listEntity;
-	}//method
-}//class
+		return stateMap;
+	}
+
+}

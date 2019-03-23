@@ -2,6 +2,7 @@ package com.usa.gov.fedral.ssa.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.usa.gov.fedral.ssa.constant.AppConstants;
-import com.usa.gov.fedral.ssa.entity.StateMasterEntity;
 import com.usa.gov.fedral.ssa.model.SsnMaster;
 import com.usa.gov.fedral.ssa.properties.AppProperties;
 import com.usa.gov.fedral.ssa.service.SSAService;
@@ -86,18 +86,16 @@ public class SSAController {
 	 * @param model
 	 */
 	private void initForm(Model model) {
-		List<StateMasterEntity> listEntity=null;
-		List<String> statesList=new ArrayList<String>();
-		//invoke the service class method
-		listEntity=service.findAllStates();
-		listEntity.forEach(entity->{
-			statesList.add(entity.getStateName());
-		});
-		model.addAttribute("statesList", statesList);
+		logger.debug("***SSAController:: initForm() method started***");
+		Map<String, String> statesMap=service.getAllStates();
+		
+		model.addAttribute("statesList", statesMap);
 
 		List<String> gendersList = new ArrayList<>();
 		gendersList.add("Male");
 		gendersList.add("Fe-Male");
 		model.addAttribute("gendersList", gendersList);
+		logger.debug("***SSAController:: initForm() method ended***");
+		logger.info("***genders list and states list generated***");
 	}
 }

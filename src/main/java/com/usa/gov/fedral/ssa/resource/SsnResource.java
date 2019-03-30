@@ -12,6 +12,12 @@ import com.usa.gov.fedral.ssa.exception.SSNNotfoundException;
 import com.usa.gov.fedral.ssa.resource.model.SsnProfile;
 import com.usa.gov.fedral.ssa.service.SSAService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
+@Api(value="Swagger2SSA-Web")
 @RestController
 public class SsnResource {
 	
@@ -30,6 +36,22 @@ public class SsnResource {
 	 * @param ssn
 	 * @return
 	 */
+	@ApiOperation(value="This is for Validating SSN",
+				produces="application/xml,application/json",
+				response=ResponseEntity.class
+				)
+	@ApiResponses(value = {
+
+	        @ApiResponse(code = 200, message = "SSN Found & Successfully Validated"),
+
+	        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+
+	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+
+	        @ApiResponse(code = 404, message = "SSN Not Found & Validation Failed")
+
+			}
+	)
 	@GetMapping(path="/validateSSN/{ssn}",produces= {"application/json","application/xml"})
 	public ResponseEntity<Object> validateSSN(@PathVariable long ssn) {
 		logger.debug("validateSSN() method execution is started");
